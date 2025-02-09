@@ -16,11 +16,13 @@
     "@vue/tsconfig": "^0.7.0",
     "@yike-design/resolver": "^0.0.1",
     "@yike-design/ui": "^0.0.20",
+    "dayjs": "^1.11.13",
     "less": "^4.2.2",
     "typescript": "~5.7.2",
     "unplugin-auto-import": "^19.0.0",
     "unplugin-vue-components": "^28.0.0",
     "vite": "^6.1.0",
+    "vue-router": "^4.5.0",
     "vue-tsc": "^2.2.0"
   }
 }

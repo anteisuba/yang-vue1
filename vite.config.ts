@@ -12,5 +12,14 @@ export default defineConfig({
     AutoImport({ resolvers: [YikeResolver()] }),
     Components({ resolvers: [YikeResolver({ sideEffect: true })] }),
   ],
-
+  css: {
+    //css预处理
+    preprocessorOptions: {
+      less: {
+        charset: false,
+        additionalData:
+          '@import "@yike-design/ui/es/components/styles/basis.less";'
+      }
+    }
+  }
 })

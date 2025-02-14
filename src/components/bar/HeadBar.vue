@@ -1,6 +1,6 @@
 <template>
     <div class="head-bar">
-        <yk-space align="center" size="m" style="cursor: pointer;">
+        <yk-space align="center" size="m" style="cursor: pointer;" v-on:click="backHome">
             <img src="../../assets/Group18.svg" class="logo"/>
             <span class="name">博客后台</span>
         </yk-space>
@@ -13,23 +13,13 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'component-name',
-    
-    data() {
-        return {
-            
-        }
-    },
-    
-    computed: {
-        
-    },
-    
-    methods: {
-        
-    }
+<script lang="ts" setup>
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+//返回总览
+const backHome = () => {
+    router.push('/')
 }
 </script>
 
@@ -40,14 +30,16 @@ export default {
         position: fixed; 
         top: 0;
         left: 0;
-        width: 1440px;
+        right: 0;
+        width: 100%;
         height: 72px;
         background: @bg-color-l;
         z-index: 10;
         // 分布在两边
         display: flex;
         // 上下居中
-        align-content: space-between;
+        // align-content: space-between;
+        align-items: center;
         // 第一个项目放在起点
         // 最后一个项目放在终点
         // 剩余空间平均分配到其他项目之间

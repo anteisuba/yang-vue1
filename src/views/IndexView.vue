@@ -1,7 +1,9 @@
 <template>
     <div class="index-view">
+        <!-- 菜单 -->
         <menu-bar />
-        <router-view></router-view>
+        <!-- 子路由 -->
+        <router-view />
     </div>
 
 </template>
@@ -12,7 +14,6 @@ import MenuBar from '../components/bar/MenuBar.vue';
 
 <style lang="less" scoped>
     .index-view {
-        padding-left: 200px;
-        
+        padding:32px 32px 32px 232px;
     }
 </style>

@@ -2,16 +2,18 @@
 import HeadBar from './components/bar/HeadBar.vue'
 </script>
 
+
+<!-- App.vue是全部页面 -->
 <template>
   <!-- 头部 -->
   <head-bar/>
-  <!-- 内容 -->
-  <router-view/>
+  <!-- IndexView在这里渲染 当 URL 改变时，<router-view> 会自动渲染与当前路由匹配的组件 -->
+  <router-view/> 
   
 </template>
 
 <style scoped>
-.logo {
+/* .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
@@ -22,5 +24,5 @@ import HeadBar from './components/bar/HeadBar.vue'
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
-}
+} */
 </style>

@@ -1,8 +1,8 @@
 <template>
     <yk-space dir="vertical" size="xl">
-        <div class="data-card">
-            <div class="data-card__title">
-                <p class="data-card__title-name">访问量</p>
+        <div class="card">
+            <div class="card__title">
+                <p class="card__title-name">访问量</p>
                 <yk-radio-group v-model="visitRadio" type="button" :solid="true"  @change="getVisit">
                     <yk-radio value="week">近一周</yk-radio>
                     <yk-radio value="moon">近一月</yk-radio>
@@ -10,17 +10,21 @@
             </div>
         </div>
         <LineChart :data="visitData" chart-height="208px" />
-        <div class="data-card">
-            <div class="data-card__title">
-                <p class="data-card__title-name">数据监测</p>
+        <div class="card">
+            <div class="card__title">
+                <p class="card__title-name">数据监测</p>
                 <yk-radio-group v-model="checkRadio" type="button" :solid="true">
                     <yk-radio value="week">近一周</yk-radio>
                     <yk-radio value="moon">近一月</yk-radio>
-                </yk-radio-group>
-            
+                </yk-radio-group>            
             </div>
-        </div>
-        <PieChart title="设备总数" :data="survey.data.device" chart-height="208px"/>
+            <div style="display: flex;">
+                <PieChart title="设备总数" :data="survey.data.device" chart-height="208px"/>
+                <PieChart title="访问总数" :data="survey.data.website" chart-height="208px"/>
+            </div>
+        </div> 
+
+        
     </yk-space>
 </template>
 
@@ -50,22 +54,6 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
-.data-card {
-    padding:@space-xl;
-    border-radius:@radius-m;
-    background:@bg-color-l;
-    width:100%;
-    &__title{
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        padding-bottom:@space-l;
-        &-name{
-            .font-l();
-            font-weight:600;
-            color:@font-color-l;
-        }
-    } 
-}
+
 
 </style>

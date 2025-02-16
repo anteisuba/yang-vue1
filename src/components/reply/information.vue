@@ -1,5 +1,5 @@
 <template>
-本地文件
+    <div>私信</div>
 </template>
 
 <script lang="ts" setup>
@@ -8,4 +8,4 @@
 
 <style lang="less" scoped>
 
-</style>
+</style>    

@@ -7,6 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Comment: typeof import('./src/components/reply/comment.vue')['default']
+    Commonnt: typeof import('./src/components/reply/commonnt.vue')['default']
+    Commont: typeof import('./src/components/reply/commont.vue')['default']
     Datas: typeof import('./src/components/overview/datas.vue')['default']
     Gather: typeof import('./src/components/overview/gather.vue')['default']
     HeadBar: typeof import('./src/components/bar/HeadBar.vue')['default']
@@ -15,9 +18,11 @@ declare module 'vue' {
     IconMove2Fill: typeof import('@yike-design/ui/es/components/svg-icon')['IconMove2Fill']
     IconPlusOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconPlusOutline']
     IconSearchOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSearchOutline']
+    Information: typeof import('./src/components/reply/information.vue')['default']
     Line: typeof import('./src/components/echarts/line.vue')['default']
     MenuBar: typeof import('./src/components/bar/MenuBar.vue')['default']
     Pie: typeof import('./src/components/echarts/pie.vue')['default']
+    Reply: typeof import('./src/components/reply/reply.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TopTitle: typeof import('./src/components/bar/TopTitle.vue')['default']
@@ -30,8 +35,11 @@ declare module 'vue' {
     YkPagination: typeof import('@yike-design/ui')['YkPagination']
     YkRadio: typeof import('@yike-design/ui')['YkRadio']
     YkRadioGroup: typeof import('@yike-design/ui')['YkRadioGroup']
+    YkScro: typeof import('@yike-design/ui')['YkScro']
+    YkScrollbar: typeof import('@yike-design/ui')['YkScrollbar']
     YkSearch: typeof import('@yike-design/ui')['YkSearch']
     YkSpace: typeof import('@yike-design/ui')['YkSpace']
+    YkTag: typeof import('@yike-design/ui')['YkTag']
     YkText: typeof import('@yike-design/ui')['YkText']
     YkTheme: typeof import('@yike-design/ui')['YkTheme']
     YkTitle: typeof import('@yike-design/ui')['YkTitle']

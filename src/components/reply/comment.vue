@@ -3,13 +3,13 @@
         <div class="card__title">
             <p class="card__title-name">评论{{ count }}</p>
         </div>
-        <yk-scrollbar ref="scrollbar" :height="height">
+        <yk-scrollbar ref="scrollbar" :height="height" style="padding: 0 24px;">
             <yk-space dir="vertical">
-                <reply v-for="item in comments" :key="item.id" :content="item" :is-comment="true" />
+                <reply v-for="item in comments" :key="item.id" :content="item" :is-comment="true" @delete="deleteComment" />
             </yk-space>
         </yk-scrollbar>
         <div class="comment__pagination">
-            <yk-pagination :total="count" size="l"/>
+            <yk-pagination :total="count" size="xl"/>
         </div>
     </div>
 </template>
@@ -57,6 +57,15 @@
         console.log(data)
     }
 
+
+    //删除
+    const deleteComment = (e:number) => {
+        comments.value = comments.value.filter((obj: any) => {
+            return obj.id !== e
+        })
+    }
+
+    //挂载
     onMounted(()=> {
         drwCommentData(true)
     })
@@ -70,17 +79,21 @@
 .comment{
     padding: @space-xl 10px 64px 10px;
     position: relative;
+    .card__title-name{
+        padding: 0 @space-xl;
+    }
     &__pagination{
         padding: @space-l @space-xl;
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: center;
         border-top: 1px solid @line-color-s;
         position: absolute;
-        bottom: -60px;
+        bottom: 0;
         width: 100%;
         left: 0;
-
+        background-color: #fff;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
     }
 }
 </style>    

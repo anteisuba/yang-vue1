@@ -6,6 +6,9 @@
                 <yk-text><a href="https://x.com/ndng16752248">{{content?.user.name}}</a></yk-text>
                 <yk-text type="third" class="time">時間 {{content?.moment}}</yk-text>
             </div>
+        </div>
+        <div class="reply__main--delete">
+            <IconDeleteOutline @click="deleteReply(props.content!.id)" />
         </div> 
     </yk-space>
     <yk-space dir="vertical" size="s" class="reply__main">
@@ -17,17 +20,22 @@
             <yk-tag type="primary">コミック</yk-tag>
             <yk-text type="success" v-show="content?.complaint! > 0">いいね {{ content?.complaint }}</yk-text>
         </yk-space>
-
+       
     </yk-space>
 </template>
 
 <script lang="ts" setup>
 import { ReplyProps } from './replay';
-
 const props = withDefaults(defineProps<ReplyProps>(),{
     isComment:true,
-
 })
+
+const emits = defineEmits(["delete"])
+
+//删除
+const deleteReply = (e:number) => {
+    emits("delete", e)
+}
 </script>
 
 <style lang="less" scoped>
@@ -38,22 +46,36 @@ const props = withDefaults(defineProps<ReplyProps>(),{
         width: 100%;
         padding-bottom: 16px;
         flex: 1;
+        position: relative;
+        &--delete{
+            position: absolute;
+            right: 16px;
+            top: 0;
+            width: 16px;
+            cursor: pointer;
+            color: @font-color-s;
+            display: none;
+            z-index: 1;
+            font-size: 16px;
+        }
     }
     &__name {
-        display:flex;
+        display: flex;
+        flex-direction: row;
         align-items: center;
         gap: 8px;
-        .name-time {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-        :deep(.time) {
-            color: #666;
-            font-size: 12px;
+    }
+    &__name .name-time {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    &:hover {
+        .reply__main--delete {
+            display: block;
         }
     }
-
 }
 .comment img {
     max-width: 534px;  // 设置最大宽度为容器宽度

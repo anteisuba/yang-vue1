@@ -13,7 +13,7 @@ import mermaid from 'mermaid'
 
 onMounted(() => {
     mermaid.initialize({
-        startOnLoad: true
+        startOnLoad: true,
     })
 })
 </script>

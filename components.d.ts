@@ -15,6 +15,7 @@ declare module 'vue' {
     HeadBar: typeof import('./src/components/bar/HeadBar.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconAlarmOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconAlarmOutline']
+    IconDeleteOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconDeleteOutline']
     IconMove2Fill: typeof import('@yike-design/ui/es/components/svg-icon')['IconMove2Fill']
     IconPlusOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconPlusOutline']
     IconSearchOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSearchOutline']

@@ -1,7 +1,7 @@
 <template>
     <yk-space size="m" class="reply">
         <div class="reply__name">
-            <yk-avatar img-url="https://pbs.twimg.com/profile_images/1759288578851708928/3vfE6G6y_400x400.jpg" />
+            <yk-avatar img-url="https://pbs.twimg.com/profile_images/1759288578851708928/3vfE6G6y_400x400.jpg" v-if="isComment"/>
             <div class="name-time">
                 <yk-text><a href="https://x.com/ndng16752248">{{content?.user.name}}</a></yk-text>
                 <yk-text type="third" class="time">時間 {{content?.moment}}</yk-text>
@@ -13,7 +13,7 @@
     </yk-space>
     <yk-space dir="vertical" size="s" class="reply__main">
         <div class="comment">
-            <yk-text type="secondary">{{content?.comment}}</yk-text>
+            <yk-text type="secondary">{{ content?.comment }}</yk-text>
             <img src="https://pbs.twimg.com/media/Gjqk9TsbwAEmbf5?format=jpg&name=4096x4096" alt="Phoebe fanart" />
         </div>
         <yk-space>
@@ -26,6 +26,7 @@
 
 <script lang="ts" setup>
 import { ReplyProps } from './replay';
+
 const props = withDefaults(defineProps<ReplyProps>(),{
     isComment:true,
 })

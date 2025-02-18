@@ -25,7 +25,6 @@
     type titleProps = {
         name?:string;
         isSearch:boolean;
-
     }
     //设置组件 withDefaults:为props设置默认值  defineProps根据titleProps类型检查传入的属性
     const props = withDefaults(defineProps<titleProps>(),{
@@ -51,14 +50,14 @@
 
 <style lang="less" scoped>
 .top_title {
-    display: flex !important;  // 提高优先级
-    justify-content: space-between !important;
-    align-items: center !important;
+    display: flex ;  // 提高优先级
+    justify-content: space-between ;
+    align-items: center ;
     width: 100%;  // 确保占满宽度
 
 }
 .left-content {
-    display: flex !important;  // 提高优先级
+    display: flex;  // 提高优先级
     align-items: center;
     gap: 12px;  /* 控制标题和自定义插槽之间的间距 */
 }

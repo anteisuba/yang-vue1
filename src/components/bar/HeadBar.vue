@@ -5,21 +5,30 @@
             <span class="name">博客后台</span>
         </yk-space>
         <yk-space align="center" size="xl">
-            <IconMove2Fill style="font-size: 20px;"/>
+            <IconMove2Fill style="font-size: 20px;" @click="changeActive(true)"/>
             <yk-avatar img-url="https://pbs.twimg.com/profile_images/1875328788785197058/QI8qWO_0_400x400.jpg"></yk-avatar>
             <div><yk-theme skin="light" /></div>
             <yk-button>退出</yk-button>
         </yk-space>
+        <Information :active="active" @close="changeActive(false)"/>
     </div>
 </template>
 
 <script lang="ts" setup>
+import { ref } from "vue"
 import { useRouter } from 'vue-router';
+import { Information } from '../reply';
 const router = useRouter();
 
+const active = ref<boolean>(false)
 //返回总览
 const backHome = () => {
     router.push('/')
+}
+
+// 展开/关闭私信
+const changeActive = (e:boolean) => {
+    active.value = e;
 }
 </script>
 

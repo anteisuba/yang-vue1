@@ -9,17 +9,22 @@
             </yk-space>
         </yk-scrollbar>
         <div class="comment__pagination">
-            <yk-pagination :total="count" size="xl"/>
+            <yk-pagination :total="count" size="xl" @change="chagePage" />
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { onMounted, ref } from "vue"
+    import { onMounted, ref,getCurrentInstance } from "vue"
     import reply from "./reply.vue";
     import { comment } from "../../mock/data";
     import type { CommentProps } from "./replay";
 
+
+    const proxy: any = getCurrentInstance()?.proxy
+
+
+    //props
     const props = withDefaults(defineProps<CommentProps>(),{
         pageSize:8,
         height:"560px"
@@ -34,21 +39,17 @@
         token?:string;
         pageSize:number; //单页条数
         nowPage:number; //当前页
-        count?:boolean;
     }
 
     const request:Requset = {
         pageSize:props.pageSize,
         nowPage:1,
-        count:false,
     }
 
     //获取数据
-    const drwCommentData = (e:boolean) => {
+    const drwCommentData = () => {
         let data = comment.data;
-        if(e) {
-            count.value = data.count;
-        }
+        count.value = data.count;
         comments.value = data.list.slice(
             (request.nowPage - 1) * request.pageSize,
             request.nowPage * request.pageSize
@@ -57,17 +58,29 @@
         console.log(data)
     }
 
+    //翻页
+    const chagePage = (e:number) => {
+        request.nowPage = e;
+        drwCommentData()
+
+    }
+
 
     //删除
     const deleteComment = (e:number) => {
         comments.value = comments.value.filter((obj: any) => {
             return obj.id !== e
         })
+        proxy.$message({
+            type: 'success',
+            message: h('span', { style: 'color:green;' }, '删除成功'),
+        })
+
     }
 
     //挂载
     onMounted(()=> {
-        drwCommentData(true)
+        drwCommentData()
     })
 
 

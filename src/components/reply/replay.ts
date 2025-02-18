@@ -9,3 +9,9 @@ export type ReplyProps = {
     isComment: boolean;
 
 }
+
+export type InformationProps = {
+    active:boolean;
+    pageSize:number;
+
+}

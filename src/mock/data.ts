@@ -92,7 +92,7 @@ export const comment = Mock.mock({
             "id|+1": 0,
             "article": {
                 "id|+1": 2,
-                "name": "@title(3,12)",
+                "name": "@ctitle(3,12)",
             },
             "user": {
                 "id|+1": 3,
@@ -102,6 +102,34 @@ export const comment = Mock.mock({
             "comment": getRandomComment(),
             "moment": "@datetime()",
             "complaint|0-12": 0
+        }]
+    }
+})
+
+//文章状态
+export const state = Mock.mock({
+    "data":[
+        {
+            "id":0,
+            "name":"已发布",
+            "value|0-30":4,
+        },{
+            "id":1,
+            "name":"未发布",
+            "value|0-30":4,
+        }
+    ]
+})
+
+//文章分组
+export const subset = Mock.mock({
+    "data": {
+        "count": 123,
+        "list|4": [{
+            "id|+1": 0,
+            "name":"@ctitle(2,4)",
+            "value|0-30":4,
+            "moment":"@datatime()",
         }]
     }
 })

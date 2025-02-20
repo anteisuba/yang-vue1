@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="reply__main--delete">
-            <IconDeleteOutline @click="deleteReply(props.content!.id)" />
+            <IconDeleteOutline @click.stop="deleteReply(props.content!.id)" />
         </div> 
     </yk-space>
     <yk-space dir="vertical" size="s" class="reply__main">

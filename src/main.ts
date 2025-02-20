@@ -7,9 +7,11 @@ import '@yike-design/ui/es/index.less'
 import { YkMessage, YkNotification } from '@yike-design/ui'
 import Icon from '@yike-design/ui/es/components/svg-icon'
 import './style.less'
+import { createPinia } from 'pinia'
 
 import router from './router'
 
+const pinia = createPinia();
 const app = createApp(App)
 
 app.config.globalProperties.$notification = YkNotification
@@ -19,4 +21,5 @@ app.config.globalProperties.$message = YkMessage
 app
     .use(router)
     .use(Icon)
+    .use(pinia)
     .mount('#app')

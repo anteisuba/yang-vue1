@@ -133,3 +133,32 @@ export const subset = Mock.mock({
         }]
     }
 })
+
+//图片合集
+const photos = [
+    "a.jpeg",
+    "b.jpeg",
+    "c.jpeg",
+    "d.jpeg",
+    "e.jpeg",
+    "f.jpeg",
+    "g.jpeg",
+    "h.jpeg",
+];
+
+//文件数据
+export const mkfile = Mock.mock({
+    "data":{
+        "count":64,
+        "list|64":[
+            {
+                "id|+1":0, 
+                "url|1":photos, //地址
+                "fileName":"@ctitle(2,12)", //文件名
+                "format":"jpeg",  //格式
+                "subsetId|0-4":3,  //所属类型
+            }
+        ]
+    }
+    
+})

@@ -10,8 +10,7 @@ export type ReplyProps = {
 
 }
 
-export type InformationProps = {
-    active:boolean;
-    pageSize:number;
-
+export interface InformationProps {
+    active: boolean;
+    pageSize: number;
 }

@@ -21,7 +21,7 @@ export const useSubsetStore = defineStore('subset', {
                  arr[i]=state.data[i].id
                  n = n-state.data[i].value
             }
-            return { id:arr.join(','),name:"未分类",value:n }
+            return { id:arr.join,name:"未分类",value:n }
         }
       },
   })

@@ -10,7 +10,7 @@
             <div><yk-theme skin="light" /></div>
             <yk-button>退出</yk-button>
         </yk-space>
-        <Information :active="active" @close="changeActive(false)"/>
+        <Information :pageSize="10" :active="active" @close="changeActive(false)"/>
     </div>
 </template>
 

@@ -20,6 +20,7 @@
             @cancel="cancel"
             @confirm="confirm"
             placement="bottom"
+            tigger="click"
             >
                 <yk-text type="primary">
                     <IconCirclePlusOutline style="margin-right: 4px;"/>新建

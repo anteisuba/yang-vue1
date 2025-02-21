@@ -13,12 +13,12 @@
         <yk-pagination :total="count" simple @change="chagePage" />
     </template>
   </yk-drawer>
-</template>
+</template>  
 
 <script lang="ts" setup>
 import { toRefs } from "vue"
 import { InformationProps } from "./replay"
-import { onMounted, ref,getCurrentInstance } from "vue"
+import { onMounted, ref,getCurrentInstance, h } from "vue"
 import { comment } from "../../mock/data";
 
 const proxy:any = getCurrentInstance()?.proxy
@@ -28,8 +28,6 @@ const props = withDefaults(defineProps<InformationProps>(),{
     pageSize:8
 })
 const emits = defineEmits(["close"])
-
-
 
 const nowActive = ref(props.active)
 const { active } = toRefs(props)
@@ -72,7 +70,6 @@ const closes = () => {
 
     }
 
-
     //删除
     const deleteComment = (e:number) => {
         comments.value = comments.value.filter((obj: any) => {
@@ -80,7 +77,7 @@ const closes = () => {
         })
         proxy.$message({
             type: 'success',
-            message: h('span', { style: 'color:green;' }, '删除成功'),
+            message: h('span', { style: 'color:green;' }, '删除成功')
         })
 
     }
@@ -90,9 +87,8 @@ const closes = () => {
         drwCommentData()
     })
 
-
 </script>
 
 <style lang="less" scoped>
 
-</style>    
+</style>

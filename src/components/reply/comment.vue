@@ -8,7 +8,7 @@
                 <reply v-for="item in comments" :key="item.id" :content="item" :is-comment="true" @delete="deleteComment" />
             </yk-space>
         </yk-scrollbar>
-        <div class="comment__pagination">
+        <div class="pagination">
             <yk-pagination :total="count" size="xl" @change="chagePage" />
         </div>
     </div>
@@ -94,19 +94,6 @@
     position: relative;
     .card__title-name{
         padding: 0 @space-xl;
-    }
-    &__pagination{
-        padding: @space-l @space-xl;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-top: 1px solid @line-color-s;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        left: 0;
-        background-color: #fff;
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
     }
 }
 </style>    

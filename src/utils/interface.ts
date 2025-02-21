@@ -22,3 +22,13 @@ export interface SubsetData {
     value: number;
     moment?:string;
 }
+
+//文件
+export interface FileData {
+    id:number;
+    url:string;
+    fileName:string;
+    format:string;
+    subsetId:number;
+    selected?:boolean; //是否选择
+}

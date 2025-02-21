@@ -10,12 +10,14 @@
             </template>
         </top-title>
         <subset />
+        <files :page-size="8" :subset-id="-1" />
     </yk-space>
 </template>
 
 <script lang="ts" setup>
 import TopTitle from '../components/bar/TopTitle.vue';
 import subset from '../components/subset/subset.vue';
+import files from '../components/files/FIles.vue';
 </script>
 
 <style lang="less" scoped>

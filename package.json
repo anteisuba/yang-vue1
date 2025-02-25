@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.{js,ts,vue,css,less,scss,json}\""
   },
   "dependencies": {
     "echarts": "^5.6.0",
@@ -20,12 +21,15 @@
     "@types/mockjs": "^1.0.10",
     "@types/node": "^22.13.1",
     "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/tsconfig": "^0.7.0",
     "@yike-design/resolver": "^0.0.1",
     "@yike-design/ui": "^0.0.20",
     "dayjs": "^1.11.13",
+    "eslint-plugin-prettier": "^5.2.3",
     "less": "^4.2.2",
     "path": "^0.12.7",
+    "prettier": "^3.5.2",
     "typescript": "~5.7.2",
     "unplugin-auto-import": "^19.1.0",
     "unplugin-vue-components": "^28.1.0",

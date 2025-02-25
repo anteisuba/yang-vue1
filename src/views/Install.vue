@@ -1,11 +1,5 @@
-<template>
-    设置
-</template>
+<template>设置</template>
 
-<script lang="ts" setup>
+<script lang="ts" setup></script>
 
-</script>
-
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

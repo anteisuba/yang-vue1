@@ -1,23 +1,17 @@
 <template>
-    我的
-    <div class="mermaid">
-        graph TD
-        A[开始] --> B[处理]
-        B --> C[结束]
-    </div>
+  我的
+  <div class="mermaid">graph TD A[开始] --> B[处理] B --> C[结束]</div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
-import mermaid from 'mermaid'
+  import { onMounted } from 'vue'
+  import mermaid from 'mermaid'
 
-onMounted(() => {
+  onMounted(() => {
     mermaid.initialize({
-        startOnLoad: true,
+      startOnLoad: true,
     })
-})
+  })
 </script>
 
-<style lang="less" scoped>
-
-</style>   
+<style lang="less" scoped></style>

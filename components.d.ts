@@ -28,6 +28,8 @@ declare module 'vue' {
     IconSwitchOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSwitchOutline']
     IconTickMinOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconTickMinOutline']
     Information: typeof import('./src/components/reply/information.vue')['default']
+    Label: typeof import('./src/components/label/label.vue')['default']
+    LabelManage: typeof import('./src/components/label/label-manage.vue')['default']
     Line: typeof import('./src/components/echarts/line.vue')['default']
     MenuBar: typeof import('./src/components/bar/MenuBar.vue')['default']
     Pie: typeof import('./src/components/echarts/pie.vue')['default']

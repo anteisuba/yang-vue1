@@ -1,11 +1,5 @@
-<template>
-    图库
-</template>
+<template>图库</template>
 
-<script lang="ts" setup>
+<script lang="ts" setup></script>
 
-</script>
-
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

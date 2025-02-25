@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import HeadBar from './components/bar/HeadBar.vue'
+  import HeadBar from './components/bar/HeadBar.vue'
 </script>
-
 
 <!-- App.vue是全部页面 -->
 <template>
   <!-- 头部 -->
-  <head-bar/>
+  <head-bar />
   <!-- IndexView在这里渲染 当 URL 改变时，<router-view> 会自动渲染与当前路由匹配的组件 -->
-  <router-view/> 
-  
+  <router-view />
 </template>
 
 <style scoped>
-/* .logo {
+  /* .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;

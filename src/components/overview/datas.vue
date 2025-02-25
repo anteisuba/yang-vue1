@@ -1,59 +1,54 @@
 <template>
-    <yk-space dir="vertical" size="xl">
-        <div class="card">
-            <div class="card__title">
-                <p class="card__title-name">访问量</p>
-                <yk-radio-group v-model="visitRadio" type="button" :solid="true"  @change="getVisit">
-                    <yk-radio value="week">近一周</yk-radio>
-                    <yk-radio value="moon">近一月</yk-radio>
-                </yk-radio-group>
-            </div>
-        </div>
-        <LineChart :data="visitData" chart-height="208px" />
-        <div class="card">
-            <div class="card__title">
-                <p class="card__title-name">数据监测</p>
-                <yk-radio-group v-model="checkRadio" type="button" :solid="true">
-                    <yk-radio value="week">近一周</yk-radio>
-                    <yk-radio value="moon">近一月</yk-radio>
-                </yk-radio-group>            
-            </div>
-            <div style="display: flex;">
-                <PieChart title="设备总数" :data="survey.data.device" chart-height="208px"/>
-                <PieChart title="访问总数" :data="survey.data.website" chart-height="208px"/>
-            </div>
-        </div> 
-
-        
-    </yk-space>
+  <yk-space dir="vertical" size="xl">
+    <div class="card">
+      <div class="card__title">
+        <p class="card__title-name">访问量</p>
+        <yk-radio-group v-model="visitRadio" type="button" :solid="true" @change="getVisit">
+          <yk-radio value="week">近一周</yk-radio>
+          <yk-radio value="moon">近一月</yk-radio>
+        </yk-radio-group>
+      </div>
+    </div>
+    <LineChart :data="visitData" chart-height="208px" />
+    <div class="card">
+      <div class="card__title">
+        <p class="card__title-name">数据监测</p>
+        <yk-radio-group v-model="checkRadio" type="button" :solid="true">
+          <yk-radio value="week">近一周</yk-radio>
+          <yk-radio value="moon">近一月</yk-radio>
+        </yk-radio-group>
+      </div>
+      <div style="display: flex">
+        <PieChart title="设备总数" :data="survey.data.device" chart-height="208px" />
+        <PieChart title="访问总数" :data="survey.data.website" chart-height="208px" />
+      </div>
+    </div>
+  </yk-space>
 </template>
 
 <script lang="ts" setup>
-import { ref,onMounted } from 'vue'
-import { LineChart,PieChart } from '../echarts/index'
-import { visit,survey } from '../../mock/data'
+  import { ref, onMounted } from 'vue'
+  import { LineChart, PieChart } from '../echarts/index'
+  import { visit, survey } from '../../mock/data'
 
-//访问量
-const visitData = ref(visit.data)
-const getVisit= (e:string) => {
-    let data = visit.data;
+  //访问量
+  const visitData = ref(visit.data)
+  const getVisit = (e: string) => {
+    let data = visit.data
     console.log(data)
-    if(e==="week") {
-        data=data.slice(0,7)
+    if (e === 'week') {
+      data = data.slice(0, 7)
     }
-    visitData.value = data;
+    visitData.value = data
     console.log(visitData.value)
-}
+  }
 
-const visitRadio = ref('week')
-const checkRadio = ref('week')
+  const visitRadio = ref('week')
+  const checkRadio = ref('week')
 
-onMounted(() => {
+  onMounted(() => {
     getVisit(visitRadio.value)
-})
+  })
 </script>
 
-<style lang="less" scoped>
-
-
-</style>
+<style lang="less" scoped></style>

@@ -5,7 +5,7 @@
       <!-- wrap 可以换行 -->
       <yk-space style="flex: none">
         <yk-popconfirm
-          title="我自定义的标题"
+          title="新建标签"
           @cancel="cancel"
           @confirm="confirm"
           placement="bottom"
@@ -28,7 +28,7 @@
           </template>
         </yk-popconfirm>
         <yk-text type="primary" @click="showModal">
-          <IconSettingsOutline style="margin-right: 4px" />管理分组
+          <IconSettingsOutline style="margin-right: 4px" />管理标签
         </yk-text>
       </yk-space>
     </div>
@@ -45,8 +45,7 @@
     </yk-space>
   </div>
   <yk-modal v-model="visible" title="管理分组">
-    <!-- <label-manage /> -->
-    <span>这一块是modal对话框的内容部分，这里支持各种标签，组件</span>
+    <label-manage :label="label" />
     <template #footer>
       <yk-button @click="showModal">确定</yk-button>
     </template>
@@ -57,7 +56,6 @@
   import { mklabel } from '../../mock/data'
   import { onMounted, ref, getCurrentInstance } from 'vue'
   import { LableData } from '../../utils/interface'
-  // import labelManage from './label-manage.vue'
 
   const emits = defineEmits(['nowlabel'])
 
@@ -75,9 +73,9 @@
     }
   }
   //获取标签
-  const label = ref<LableData[]>()
+  const label = ref<LableData[]>([])
   const rawlabel = () => {
-    label.value = mklabel.data.list
+    label.value = [...mklabel.data.list]
   }
 
   //取消
@@ -90,10 +88,9 @@
     if (inputValue.value) {
       let obj = {
         id: -2,
-        name: inputValue.value,
-        value: 0,
+        name: inputValue.value
       }
-      labelStore.data.push(obj)
+      label.value!.push(obj)
       inputValue.value = ''
       proxy.$message({ type: 'primary', message: '插入完成' })
     } else {

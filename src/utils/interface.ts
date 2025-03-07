@@ -24,6 +24,12 @@ export interface SubsetData {
 }
 
 //标签
+  /**
+   * Represents a label item
+   * @property {number|string} id - Label id
+   * @property {string|number} name - Label name
+   * @property {string} [moment] - Label creation time
+   */
 export interface LableData {
   id: number | string
   name: string | number
@@ -38,4 +44,18 @@ export interface FileData {
   format: string
   subsetId: number
   selected?: boolean //是否选择
+}
+
+//文章
+export interface ArticleData {
+  id: number
+  title: string;
+  subsetId?:number;
+  moment:Date;
+  label?:string[];
+  intorduce?:string;
+  cover?:string;
+  views?:number;
+  comment?:number;
+  praise?:number;
 }

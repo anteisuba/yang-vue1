@@ -20,8 +20,8 @@
       </div>
       <div
         class="subset__menu"
-        :class="{ 'subset__menu-seledred': selected == subsetStore.exclude + 'exclude' }"
-        @click="changeOption(subsetStore.exclude.id, 'exculd')"
+        :class="{ 'subset__menu-seledred': selected == subsetStore.exclude.id + 'exclude' }"
+        @click="changeOption(subsetStore.exclude.id, 'exclude')"
       >
         {{ subsetStore.exclude.name }}{{ subsetStore.exclude.value }}
       </div>
@@ -37,7 +37,7 @@
     </yk-space>
     <yk-space style="flex: none">
       <yk-popconfirm
-        title="我自定义的标题"
+        title="新建分组"
         @cancel="cancel"
         @confirm="confirm"
         placement="bottom"

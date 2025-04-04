@@ -50,10 +50,11 @@ export interface FileData {
 export interface ArticleData {
   id: number
   title: string;
+  state:number;
   subsetId?:number;
   moment:Date;
   label?:string[];
-  intorduce?:string;
+  introduce?:string;
   cover?:string;
   views?:number;
   comment?:number;

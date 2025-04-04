@@ -137,9 +137,8 @@ export const subset = Mock.mock({
 })
 
 //图片合集
+const photos2 = ["a.jpeg", "b.jpeg", "c.jpeg", "d.jpeg", "e.jpeg", "f.jpeg", "g.jpeg", "h.jpeg"]
 const photos = ["a.png", "b.png", "c.png", "d.png", "e.png", "f.png", "g.png", "h.png"]
-
-
 //文件数据
 export const mkfile = Mock.mock({
   data: {
@@ -147,7 +146,7 @@ export const mkfile = Mock.mock({
     "list|64": [
       {
         "id|+1": 0,
-        "url|1": photos, //地址
+        "url|1": photos2, //地址
         fileName: "@ctitle(2,12)", //文件名
         format: "jpeg", //格式
         "subsetId|0-4": 3, //所属类型
@@ -176,15 +175,16 @@ export const mkarticle = Mock.mock({
       {
         "id|+1": 0,
         "cover|1": photos, //地址
+        "title": "@ctitle(2,4)", //标题
+        "state|0-1": 1, //
         "moment":"@datetime()",
         "fileName": "@ctitle(2,4)", //文件名
-        "format": "jpeg", //格式
-        "state|0-1": 0, //
+        "subsetId|0-4": 0, //所属类型
         "views|12-429":122,
         "comment|8-24":12,
-        "praise|8-123":42,
+        "praise|8-123":122,
         "introduce":"@cparagraph(1,4)",
-
+        "label|1-4":"@ctitle(2,4)"
       },
     ],
   },

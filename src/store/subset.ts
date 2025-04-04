@@ -24,4 +24,14 @@ export const useSubsetStore = defineStore('subset', {
       return { id: arr.join, name: '未分类', value: n }
     },
   },
+  actions:{
+    subsetName(e?:number){
+      for(let i = 0;i < this.$state.data.length;i++){
+        if(this.$state.data[i].id == e) {
+          return this.$state.data[i].name
+        }
+      }
+      return "未分类"
+    }
+  }
 })

@@ -48,7 +48,7 @@
   //图片路径
   const imgurl = computed(() => {
     if (!props.data?.url) {
-      return '/src/assets/touxiang/h.jpg' // 或者返回一个默认图片路径
+      return '/src/assets/touxiang/h.jpeg' // 或者返回一个默认图片路径
     }
     // 使用相对路径
     return '/src/assets/touxiang/' + props.data?.url

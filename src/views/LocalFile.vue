@@ -22,7 +22,7 @@
 <script lang="ts" setup>
   import TopTitle from '../components/bar/TopTitle.vue'
   import subset from '../components/subset/subset.vue'
-  import files from '../components/files/FIles.vue'
+  import files from '../components/files/files.vue'
 </script>
 
 <style lang="less" scoped>

@@ -17,10 +17,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { Information } from '../reply'
+  import { isRegisterApi } from '@/api'
+  import { useCode } from '@/hooks/code'
   const router = useRouter()
+
+  //code验证
+  const {tackleCode} = useCode();
 
   const active = ref<boolean>(false)
   //返回总览
@@ -32,6 +37,25 @@
   const changeActive = (e: boolean) => {
     active.value = e
   }
+
+  const isRegister=()=> {
+    
+    let data={}
+    isRegisterApi(data).then((res:any)=>{
+      console.log("isRegister 响应内容：", res);
+      // if(res.code===200) {
+      // } else if(res.code===401) {
+      //   router.push('/register')
+      // }
+      if(tackleCode(res.code)){
+
+      }
+    })
+    
+  }
+  onMounted(() => {
+    isRegister();
+  })
 </script>
 
 <style lang="less" scoped>

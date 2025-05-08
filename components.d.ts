@@ -37,6 +37,7 @@ declare module 'vue' {
     IconSettingsOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSettingsOutline']
     IconSwitchOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSwitchOutline']
     IconTickMinOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconTickMinOutline']
+    IconUploadOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconUploadOutline']
     Information: typeof import('./src/components/reply/information.vue')['default']
     Label: typeof import('./src/components/label/label.vue')['default']
     LabelManage: typeof import('./src/components/label/label-manage.vue')['default']
@@ -84,5 +85,6 @@ declare module 'vue' {
     YkTimelineItem: typeof import('@yike-design/ui')['YkTimelineItem']
     YkTitle: typeof import('@yike-design/ui')['YkTitle']
     YkTooltip: typeof import('@yike-design/ui')['YkTooltip']
+    YkUpload: typeof import('@yike-design/ui')['YkUpload']
   }
 }

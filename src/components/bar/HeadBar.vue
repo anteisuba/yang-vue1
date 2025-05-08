@@ -1,5 +1,5 @@
 <template>
-  <div class="head-bar">
+  <div class="head-bar" v-if="isLoggedIn">
     <yk-space align="center" size="m" style="cursor: pointer" v-on:click="backHome">
       <img src="../../assets/Group18.svg" class="logo" />
       <span class="name">博客后台</span>
@@ -10,7 +10,7 @@
         img-url="https://pbs.twimg.com/profile_images/1875328788785197058/QI8qWO_0_400x400.jpg"
       ></yk-avatar>
       <div><yk-theme skin="light" /></div>
-      <yk-button>退出</yk-button>
+      <yk-button @click="logout">退出</yk-button>
     </yk-space>
     <Information :pageSize="10" :active="active" @close="changeActive(false)" />
   </div>
@@ -22,7 +22,10 @@
   import { Information } from '../reply'
   import { isRegisterApi } from '@/api'
   import { useCode } from '@/hooks/code'
-  const router = useRouter()
+  const router = useRouter();
+
+  // 检查登录状态
+  const isLoggedIn = ref(!!localStorage.getItem('token'));
 
   //code验证
   const {tackleCode} = useCode();
@@ -39,6 +42,8 @@
   }
 
   const isRegister=()=> {
+    // 只有在登录状态下才检查注册
+    if (!isLoggedIn.value) return;
     
     let data={}
     isRegisterApi(data).then((res:any)=>{
@@ -53,6 +58,14 @@
     })
     
   }
+
+  // 退出登录
+  const logout = () => {
+    localStorage.removeItem('token');
+    isLoggedIn.value = false;
+    router.push('/login');
+  }
+
   onMounted(() => {
     isRegister();
   })

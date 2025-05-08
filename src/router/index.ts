@@ -10,6 +10,7 @@ import Install from '../views/Install.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import ErrorInfo from '../views/404.vue'
+import OverView from '../views/OverView.vue'
 
 // 创建路由
 const router = createRouter({
@@ -18,23 +19,52 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      // 移除对'/overview'的重定向
+      component: Login
+    },
+    {
+      path: '/index',
+      name: 'index',
       component: IndexView,
+      meta: { requiresAuth: true },
       children: [
         {
           path: 'overview',
-          component: () => import('../views/OverView.vue'),
+          name: 'overview',
+          component: OverView
         },
         {
           path: 'hello',
-          component: hello,
+          name: 'hello',
+          component: hello
         },
-        { path: '/localfile', component: LocalFile },
-        { path: '/article', component: Article },
-        { path: '/gallery', component: Gallery },
-        { path: '/diary', component: Diary },
-        { path: '/install', component: Install },
+        {
+          path: 'localfile',
+          name: 'localfile',
+          component: LocalFile
+        },
+        {
+          path: 'article',
+          name: 'article',
+          component: Article
+        },
+        {
+          path: 'gallery',
+          name: 'gallery',
+          component: Gallery
+        },
+        {
+          path: 'diary',
+          name: 'diary',
+          component: Diary
+        },
+        {
+          path: 'install',
+          name: 'install',
+          component: Install
+        }
       ],
+      // 默认进入overview页面
+      redirect: '/index/overview'
     },
     {
       path: '/login',
@@ -56,10 +86,12 @@ const router = createRouter({
 
 // 全局导航守卫处理认证
 router.beforeEach((to, from, next) => {
-  // 如果尝试访问根路径'/'
-  if (to.path === '/') {
-    // 作为后备方案重定向到登录页面
-    // 你的组件中的isRegister函数将处理进一步的重定向
+  // 判断是否已登录（可以通过检查localStorage中是否有token来判断）
+  const isLoggedIn = localStorage.getItem('token');
+  
+  // 如果页面需要认证但用户未登录
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    // 未登录时重定向到登录页面
     next('/login');
     return;
   }

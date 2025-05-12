@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import HeadBar from './components/bar/HeadBar.vue'
 import MenuBar from './components/bar/MenuBar.vue'
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const route = useRoute()
+// 只在 /index 及其子路由下显示主内容区组件
+const isMainPage = computed(() => route.path.startsWith('/index'))
 </script>
 
 <!-- App.vue是全部页面 -->
 <template>
-  <HeadBar />
-  <MenuBar />
-  <div class="hero-img"></div>
-  <div class="main-content">
+  <HeadBar v-if="isMainPage" />
+  <MenuBar v-if="isMainPage" />
+  <div class="hero-img" v-if="isMainPage"></div>
+  <div class="main-content" v-if="isMainPage">
     <router-view />
   </div>
+  <router-view v-else />
 </template>
 
 <style scoped>

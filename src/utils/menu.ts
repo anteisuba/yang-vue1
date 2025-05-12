@@ -1,31 +1,31 @@
 export const navLinks = [
   {
-    path: 'overview',
+    path: '/index/overview',
     name: 'Home',
     icon: 'IconAppFill',
   },
   {
-    path: 'localfile',
+    path: '/index/localfile',
     name: 'Blog',
     icon: 'IconHomepageFill',
   },
   {
-    path: 'article',
+    path: '/index/article',
     name: 'Videos',
     icon: 'IconFileFill',
   },
   {
-    path: 'gallery',
+    path: '/index/gallery',
     name: 'Gallery',
     icon: 'IconCameraFill',
   },
   {
-    path: 'diary',
+    path: '/index/diary',
     name: 'About',
     icon: 'IconBilibiliFill',
   },
   {
-    path: 'install',
+    path: '/index/install',
     name: 'Contact',
     icon: 'IconSettingsFill',
   },

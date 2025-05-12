@@ -13,6 +13,7 @@ declare module 'vue' {
     Comment: typeof import('./src/components/reply/comment.vue')['default']
     Commonnt: typeof import('./src/components/reply/commonnt.vue')['default']
     Commont: typeof import('./src/components/reply/commont.vue')['default']
+    ContactForm: typeof import('./src/components/install/ContactForm.vue')['default']
     Datas: typeof import('./src/components/overview/datas.vue')['default']
     Files: typeof import('./src/components/files/files.vue')['default']
     FIles: typeof import('./src/components/files/FIles.vue')['default']

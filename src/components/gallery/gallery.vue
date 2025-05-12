@@ -1,146 +1,57 @@
 <template>
   <div class="gallery-container">
-    <div class="gallery-header">
-      <yk-title :level="2" style="margin-bottom: 8px">摄影作品集</yk-title>
-      <yk-text type="secondary">探索我的摄影世界，记录生活中的美好瞬间</yk-text>
-    </div>
+    <GalleryHeader />
     
     <div class="gallery">
-      <div class="gallery__sidebar">
-        <div class="gallery__sidebar-title">
-          <yk-title :level="4" style="margin: 0; line-height: 36px">相册分类</yk-title>
-          <yk-space style="flex: none">
-            <yk-popconfirm
-              title="新建相册"
-              @cancel="cancel"
-              @confirm="confirmNewAlbum"
-              placement="bottom"
-              tigger="click"
-            >
-              <yk-text type="primary">
-                <IconCirclePlusOutline style="margin-right: 4px" />新建
-              </yk-text>
-              <template #content>
-                <div style="margin: 8px 0 16px">
-                  <yk-input
-                    show-counter
-                    :limit="10"
-                    placeholder="请输入相册名称"
-                    style="width: 208px"
-                    v-model="albumName"
-                  >
-                  </yk-input>
-                </div>
-              </template>
-            </yk-popconfirm>
-            <yk-text type="primary" @click="showModal">
-              <IconSettingsOutline style="margin-right: 4px" />管理相册
-            </yk-text>
-          </yk-space>
-        </div>
-
-        <yk-space dir="vertical" size="s" style="width: 100%">
-          <div
-            v-for="album in albums"
-            :key="album.id"
-            :class="{ 'gallery__sidebar-selected': selectedAlbum === album.id + 'album' }"
-            class="album-item"
-            @click="selectAlbum(album.id, 'album')"
-          >
-            <div class="album-item__title">
-              <span>{{ album.name }}</span>
-              <span class="album-item__count">{{ album.count }}</span>
-            </div>
-          </div>
-        </yk-space>
-        
-        <div class="gallery__sidebar-footer">
-          <yk-title :level="5" style="margin-bottom: 12px">分享你的相册</yk-title>
-          <div class="social-icons">
-            <span class="social-icon"><IconSendOutline /></span>
-            <span class="social-icon"><IconHeartOutline /></span>
-            <span class="social-icon"><IconCommentOutline /></span>
-          </div>
-        </div>
-      </div>
+      <GallerySidebar
+        :albums="albums"
+        :selected-album="selectedAlbum"
+        @select-album="selectAlbum"
+        @show-album-modal="showModal"
+        @create-album="confirmNewAlbum"
+      />
 
       <div class="gallery__content">
-        <div class="gallery__toolbar">
-          <div class="gallery__toolbar-left">
-            <yk-input-search placeholder="搜索照片..." style="width: 240px" @search="searchPhotos" />
-          </div>
-          <div class="gallery__toolbar-right">
-            <yk-space>
-              <yk-button type="primary" @click="showUploadModal">
-                <IconUploadOutline style="margin-right: 4px" />上传照片
-              </yk-button>
-              <yk-button type="secondary" @click="toggleViewMode">
-                <IconEyeOutline v-if="viewMode === 'list'" style="margin-right: 4px" />
-                <IconBulbOutline v-else style="margin-right: 4px" />
-                {{ viewMode === 'list' ? '网格视图' : '列表视图' }}
-              </yk-button>
-            </yk-space>
-          </div>
-        </div>
+        <GalleryToolbar
+          :initial-view-mode="viewMode"
+          @search="searchPhotos"
+          @search-input="handleSearchInput"
+          @view-mode-change="toggleViewMode"
+          @show-upload-modal="showUploadModal"
+        />
         
-        <!-- 照片网格视图 -->
-        <div class="gallery__grid" v-if="viewMode === 'grid'">
-          <div class="gallery__grid-item" v-for="(photo, index) in photos" :key="index">
-            <div class="gallery__image-container">
-              <img :src="photo.url" :alt="photo.name" class="gallery__image" />
-              <div class="gallery__image-overlay">
-                <yk-space>
-                  <yk-button circle size="s" type="secondary">
-                    <IconEyeOutline />
-                  </yk-button>
-                  <yk-button circle size="s" type="secondary">
-                    <IconCommentOutline />
-                  </yk-button>
-                  <yk-button circle size="s" type="danger">
-                    <IconDeleteOutline />
-                  </yk-button>
-                </yk-space>
-              </div>
-            </div>
-            <div class="gallery__image-info">
-              <yk-text>{{ photo.name }}</yk-text>
-              <yk-text type="secondary" size="s">{{ photo.date }}</yk-text>
-            </div>
-          </div>
-        </div>
+        <GalleryGrid
+          v-if="viewMode === 'grid'"
+          :photos="paginatedPhotos"
+          :highlighted-photo-ids="highlightedPhotoIds"
+          :empty-message="emptyMessage"
+          @preview="handlePreview"
+          @move="showMovePhotoModal"
+          @delete="handleDelete"
+        />
         
-        <!-- 照片列表视图 -->
-        <div class="gallery__list" v-else>
-          <yk-table :data="photos" :columns="columns">
-            <template #operation="{ record }">
-              <yk-space>
-                <yk-button type="text" size="s">
-                  <IconEyeOutline />
-                </yk-button>
-                <yk-button type="text" size="s">
-                  <IconCommentOutline />
-                </yk-button>
-                <yk-button type="text" size="s" danger>
-                  <IconDeleteOutline />
-                </yk-button>
-              </yk-space>
-            </template>
-          </yk-table>
-        </div>
+        <GalleryList
+          v-else
+          :photos="paginatedPhotos"
+          :empty-message="emptyMessage"
+          @preview="handlePreview"
+          @move="showMovePhotoModal"
+          @delete="handleDelete"
+        />
         
-        <!-- 分页 -->
-        <div class="gallery__pagination">
+        <div class="gallery__pagination" v-if="filteredPhotos.length > 0">
           <yk-pagination
             v-model:current="currentPage"
             v-model:page-size="pageSize"
-            :total="total"
+            :total="filteredPhotos.length"
             @change="handlePageChange"
+            show-size-changer
+            :page-size-options="[8, 12, 16, 24]"
           />
         </div>
       </div>
     </div>
     
-    <!-- 页面底部社交媒体链接 -->
     <div class="gallery-footer">
       <div class="footer-divider"></div>
       <div class="social-links">
@@ -163,415 +74,634 @@
     </div>
   </div>
   
-  <!-- 上传照片模态框 -->
-  <yk-modal v-model="uploadModalVisible" title="上传照片">
-    <div class="upload-container">
-      <yk-upload
-        :multiple="true"
-        :limit="5"
-        accept="image/*"
-        list-type="picture-card"
-      >
-        <IconUploadOutline style="margin-right: 4px" />上传
-      </yk-upload>
-      
-      <div class="upload-tips">
-        <yk-title :level="5">上传提示</yk-title>
-        <yk-text type="secondary">• 支持 JPG、PNG、GIF 格式</yk-text>
-        <yk-text type="secondary">• 单张照片大小不超过 10MB</yk-text>
-        <yk-text type="secondary">• 请确保拥有照片版权</yk-text>
-      </div>
-    </div>
-    <template #footer>
-      <yk-space>
-        <yk-button @click="uploadModalVisible = false">取消</yk-button>
-        <yk-button type="primary" @click="handleUpload">确认上传</yk-button>
-      </yk-space>
-    </template>
-  </yk-modal>
+  <UploadModal
+    v-model="uploadModalVisible"
+    :albums="albums"
+    :selected-album-id="selectedUploadAlbum"
+    @upload="handleUpload"
+  />
   
-  <!-- 管理相册模态框 -->
-  <yk-modal v-model="albumModalVisible" title="管理相册">
-    <yk-table :data="albums" :columns="albumColumns">
-      <template #operation="{ record }">
-        <yk-space>
-          <yk-button type="text" size="s">编辑</yk-button>
-          <yk-button type="text" size="s" danger>删除</yk-button>
-        </yk-space>
-      </template>
-    </yk-table>
-    <template #footer>
-      <yk-button type="primary" @click="albumModalVisible = false">确定</yk-button>
-    </template>
+  <MovePhotoModal
+    v-model="movePhotoModalVisible"
+    :selected-photo="selectedPhotoForMove"
+    :albums="albums"
+    @move="movePhotoToAlbum"
+  />
+  
+  <AlbumModal
+    v-model="albumModalVisible"
+    :albums="albums"
+    @edit="handleEditAlbum"
+    @delete="handleDeleteAlbum"
+  />
+  
+  <yk-modal v-model="previewVisible" title="照片预览" :footer="null">
+    <div class="preview-image-container">
+      <img :src="previewImage" alt="预览图片" class="preview-image" />
+    </div>
   </yk-modal>
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, getCurrentInstance } from 'vue'
-  
-  // 相册数据
-  const albums = ref([
-    { id: 1, name: '全部照片', count: 42 },
-    { id: 2, name: '风景', count: 15 },
-    { id: 3, name: '人物', count: 8 },
-    { id: 4, name: '动物', count: 12 },
-    { id: 5, name: '建筑', count: 7 }
-  ])
-  
-  // 照片数据（示例）
-  const photos = ref(Array(20).fill(null).map((_, index) => ({
+import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue'
+import { uploadImageApi, uploadImagesApi, getAllAlbumsApi, getAllPhotosApi, getPhotosByAlbumApi, createAlbumApi, movePhotoToAlbumApi, deletePhotoApi } from '@/api'
+import { baseImgPath } from '@/utils/env'
+import type { Photo, Album } from '@/types/api'
+import GalleryHeader from './GalleryHeader.vue'
+import GallerySidebar from './GallerySidebar.vue'
+import GalleryToolbar from './GalleryToolbar.vue'
+import GalleryGrid from './GalleryGrid.vue'
+import GalleryList from './GalleryList.vue'
+import UploadModal from './UploadModal.vue'
+import MovePhotoModal from './MovePhotoModal.vue'
+import AlbumModal from './AlbumModal.vue'
+
+// 相册数据
+const albums = ref<Album[]>([
+  { id: 1, name: '全部照片', count: 0, description: '', cover: '' }
+])
+
+// 照片数据
+const photos = ref<Photo[]>([])
+const isLoading = ref(false)
+
+// 加载初始示例照片数据（如果数据库中没有照片）
+const loadExamplePhotos = () => {
+  const examplePhotos = Array(20).fill(null).map((_, index) => ({
     id: index + 1,
     name: `照片${index + 1}.jpg`,
     url: `https://picsum.photos/300/200?random=${index + 1}`,
     size: `${Math.floor(Math.random() * 5 + 1)}MB`,
     date: `2023-${Math.floor(Math.random() * 12 + 1)}-${Math.floor(Math.random() * 28 + 1)}`,
-    albumId: Math.floor(Math.random() * 5 + 1)
-  })))
+    albumId: Math.floor(Math.random() * 5 + 1),
+    filename: `photo${index + 1}.jpg`
+  }))
   
-  // 列表视图列设置
-  const columns = [
-    { title: '照片名称', dataIndex: 'name', width: 200 },
-    { title: '大小', dataIndex: 'size', width: 100 },
-    { title: '上传日期', dataIndex: 'date', width: 150 },
-    { title: '操作', slotName: 'operation', width: 150 }
-  ]
-  
-  // 相册表格列设置
-  const albumColumns = [
-    { title: '相册名称', dataIndex: 'name', width: 200 },
-    { title: '照片数量', dataIndex: 'count', width: 100 },
-    { title: '操作', slotName: 'operation', width: 150 }
-  ]
-  
-  // 分页相关
-  const currentPage = ref(1)
-  const pageSize = ref(12)
-  const total = ref(42)
-  
-  // UI状态控制
-  const viewMode = ref('grid') // grid 或 list
-  const selectedAlbum = ref('1album')
-  const albumName = ref('')
-  const uploadModalVisible = ref(false)
-  const albumModalVisible = ref(false)
-  
-  // 获取组件实例
-  const proxy: any = getCurrentInstance()?.proxy
-  
-  // 选择相册
-  const selectAlbum = (id: number, type: string) => {
-    selectedAlbum.value = id + type
-    // 根据相册筛选照片（实际应用中可能需要从API获取）
-    // 这里仅做示例
+  if (photos.value.length === 0) {
+    photos.value = examplePhotos
   }
-  
-  // 切换视图模式
-  const toggleViewMode = () => {
-    viewMode.value = viewMode.value === 'grid' ? 'list' : 'grid'
-  }
-  
-  // 显示上传模态框
-  const showUploadModal = () => {
-    uploadModalVisible.value = true
-  }
-  
-  // 处理上传
-  const handleUpload = () => {
-    // 处理上传逻辑
-    proxy.$message({ type: 'success', message: '照片上传成功！' })
-    uploadModalVisible.value = false
-  }
-  
-  // 显示相册管理模态框
-  const showModal = () => {
-    albumModalVisible.value = true
-  }
-  
-  // 取消创建相册
-  const cancel = () => {
-    albumName.value = ''
-  }
-  
-  // 确认创建相册
-  const confirmNewAlbum = () => {
-    if (albumName.value) {
-      const newAlbum = {
-        id: albums.value.length + 1,
-        name: albumName.value,
-        count: 0
+}
+
+// 加载所有相册
+const loadAlbums = async () => {
+  try {
+    const res = await getAllAlbumsApi()
+    if (res.code === 200 && res.data) {
+      const allPhotos = albums.value.find(a => a.id === 1)
+      const backendAlbums = res.data.map((album: any) => ({
+        id: album.id,
+        name: album.name,
+        count: album.count || 0,
+        description: album.description,
+        cover: album.cover
+      }))
+      
+      const hasAllPhotosAlbum = backendAlbums.some((album: any) => album.id === 1)
+      if (!hasAllPhotosAlbum) {
+        backendAlbums.unshift(allPhotos)
       }
-      albums.value.push(newAlbum)
-      albumName.value = ''
-      proxy.$message({ type: 'success', message: '创建相册成功！' })
+      
+      albums.value = backendAlbums
+    }
+  } catch (error) {
+    console.error('加载相册失败:', error)
+  }
+}
+
+// 加载照片数据
+const loadPhotos = async (albumId?: number) => {
+  isLoading.value = true
+  try {
+    let res
+    
+    if (albumId && albumId !== 1) {
+      res = await getPhotosByAlbumApi(albumId)
     } else {
-      proxy.$message({ type: 'warning', message: '请输入相册名称' })
+      res = await getAllPhotosApi()
+    }
+    
+    if (res.code === 200 && res.data) {
+      photos.value = res.data.map((photo: any) => ({
+        id: photo.id,
+        name: photo.name,
+        url: photo.url,
+        size: formatFileSize(photo.size),
+        date: photo.date,
+        albumId: photo.album_id,
+        filename: photo.filename
+      }))
+      
+      if (photos.value.length === 0 && albumId === undefined) {
+        loadExamplePhotos()
+      }
+    }
+  } catch (error) {
+    console.error('加载照片失败:', error)
+    if (albumId === undefined) {
+      loadExamplePhotos()
+    }
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 格式化文件大小
+const formatFileSize = (size: number | string): string => {
+  if (typeof size === 'string') {
+    if (size.includes('KB') || size.includes('MB') || size.includes('GB')) {
+      return size
+    }
+    size = parseInt(size, 10)
+  }
+  
+  const kb = 1024
+  const mb = kb * 1024
+  const gb = mb * 1024
+  
+  if (size < kb) {
+    return size + 'B'
+  } else if (size < mb) {
+    return (size / kb).toFixed(2) + 'KB'
+  } else if (size < gb) {
+    return (size / mb).toFixed(2) + 'MB'
+  } else {
+    return (size / gb).toFixed(2) + 'GB'
+  }
+}
+
+// 分页相关
+const currentPage = ref(1)
+const pageSize = ref(8)
+
+// 搜索相关
+const searchQuery = ref('')
+const isSearchActive = ref(false)
+const highlightedPhotoIds = ref<number[]>([])
+const searchTimeout = ref<any>(null)
+
+// UI状态控制
+const viewMode = ref<'grid' | 'list'>('grid')
+const selectedAlbum = ref('1album')
+const uploadModalVisible = ref(false)
+const albumModalVisible = ref(false)
+const movePhotoModalVisible = ref(false)
+const previewVisible = ref(false)
+const previewImage = ref('')
+const selectedPhotoForMove = ref<Photo | null>(null)
+const selectedUploadAlbum = ref(1)
+
+// 获取组件实例
+const proxy: any = getCurrentInstance()?.proxy
+
+// 根据搜索条件和选择的相册筛选照片
+const filteredPhotos = computed(() => {
+  let result = [...photos.value]
+  
+  if (selectedAlbum.value) {
+    const albumId = parseInt(selectedAlbum.value.replace('album', ''))
+    if (albumId !== 1) {
+      result = result.filter(photo => photo.albumId === albumId)
     }
   }
   
-  // 分页变化处理
-  const handlePageChange = (page: number) => {
-    currentPage.value = page
-    // 在实际应用中可能需要从API获取数据
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase().trim()
+    result = result.filter(photo => 
+      photo.name.toLowerCase().includes(query)
+    )
   }
   
-  // 搜索照片
-  const searchPhotos = (keyword: string) => {
-    // 实现搜索功能，这里仅做示例
-    proxy.$message({ type: 'info', message: `正在搜索: ${keyword}` })
+  return result
+})
+
+// 当前页显示的照片
+const paginatedPhotos = computed(() => {
+  const startIndex = (currentPage.value - 1) * pageSize.value
+  return filteredPhotos.value.slice(startIndex, startIndex + pageSize.value)
+})
+
+// 空状态提示信息
+const emptyMessage = computed(() => {
+  if (searchQuery.value.trim()) {
+    return `没有找到名称包含 "${searchQuery.value}" 的照片`
+  } else {
+    return '该相册中还没有照片'
+  }
+})
+
+// 选择相册
+const selectAlbum = async (id: number, type: string) => {
+  const oldSelected = selectedAlbum.value
+  selectedAlbum.value = id + type
+  
+  currentPage.value = 1
+  
+  await loadPhotos(id)
+  
+  setTimeout(() => {
+    const element = document.querySelector(`.album-item--active .album-item__icon span`)
+    if (element) {
+      element.classList.add('pulse-animation')
+      setTimeout(() => {
+        element.classList.remove('pulse-animation')
+      }, 1000)
+    }
+  }, 50)
+}
+
+// 切换视图模式
+const toggleViewMode = (mode: 'grid' | 'list') => {
+  viewMode.value = mode
+}
+
+// 显示上传模态框
+const showUploadModal = () => {
+  uploadModalVisible.value = true
+}
+
+// 处理上传
+const handleUpload = async (files: File[], albumId: number, customNames: string[]) => {
+  try {
+    if (files.length === 1) {
+      const formData = new FormData()
+      formData.append('image', files[0])
+      formData.append('albumId', albumId.toString())
+      
+      if (customNames[0]) {
+        formData.append('customName', customNames[0])
+      }
+      
+      const res = await uploadImageApi(formData)
+      
+      if (res.code === 200 && res.data) {
+        const newPhoto = {
+          id: res.data.id,
+          name: res.data.name,
+          url: res.data.url,
+          size: formatFileSize(res.data.size),
+          date: res.data.date,
+          albumId: albumId,
+          filename: res.data.filename
+        }
+        
+        photos.value = [newPhoto, ...photos.value]
+        updateAlbumCountUI(albumId, 1)
+        
+        proxy.$message({ type: 'success', message: res.message || '上传成功' })
+      } else {
+        throw new Error(res.message || '上传失败')
+      }
+    } else {
+      const formData = new FormData()
+      
+      files.forEach((file, index) => {
+        formData.append('images', file)
+      })
+      
+      formData.append('albumId', albumId.toString())
+      formData.append('customNames', JSON.stringify(customNames))
+      
+      const res = await uploadImagesApi(formData)
+      
+      if (res.code === 200 && res.data) {
+        const newPhotos = res.data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          url: item.url,
+          size: formatFileSize(item.size),
+          date: item.date,
+          albumId: albumId,
+          filename: item.filename
+        }))
+        
+        photos.value = [...newPhotos, ...photos.value]
+        updateAlbumCountUI(albumId, newPhotos.length)
+        
+        proxy.$message({ type: 'success', message: res.message || `成功上传${newPhotos.length}张照片` })
+      } else {
+        throw new Error(res.message || '上传失败')
+      }
+    }
+    
+    if (selectedAlbum.value === `${albumId}album`) {
+      currentPage.value = 1
+    }
+    
+    loadAlbums()
+    uploadModalVisible.value = false
+    
+  } catch (error: any) {
+    console.error('上传错误:', error)
+    proxy.$message({ type: 'error', message: error.message || '上传失败，请稍后重试' })
+  }
+}
+
+// 更新UI中相册的照片计数
+const updateAlbumCountUI = (albumId: number, count: number) => {
+  const targetAlbumIndex = albums.value.findIndex(album => album.id === albumId)
+  if (targetAlbumIndex !== -1) {
+    albums.value[targetAlbumIndex].count += count
   }
   
-  onMounted(() => {
-    // 初始化加载数据
-  })
+  if (albumId !== 1) {
+    const allPhotosAlbumIndex = albums.value.findIndex(album => album.id === 1)
+    if (allPhotosAlbumIndex !== -1) {
+      albums.value[allPhotosAlbumIndex].count += count
+    }
+  }
+}
+
+// 显示相册管理模态框
+const showModal = () => {
+  albumModalVisible.value = true
+}
+
+// 确认创建相册
+const confirmNewAlbum = async (name: string) => {
+  try {
+    const res = await createAlbumApi({
+      name: name,
+      description: '',
+      cover: ''
+    })
+    
+    if (res.code === 200 && res.data) {
+      albums.value.push({
+        id: res.data.id,
+        name: res.data.name,
+        count: 0,
+        description: res.data.description,
+        cover: res.data.cover
+      })
+      
+      proxy.$message({ type: 'success', message: '创建相册成功！' })
+    } else {
+      throw new Error(res.message || '创建相册失败')
+    }
+  } catch (error: any) {
+    console.error('创建相册失败:', error)
+    proxy.$message({ type: 'error', message: error.message || '创建相册失败' })
+  }
+}
+
+// 分页变化处理
+const handlePageChange = (page: number) => {
+  currentPage.value = page
+  const contentElement = document.querySelector('.gallery__content')
+  if (contentElement) {
+    contentElement.scrollTop = 0
+  }
+}
+
+// 搜索照片
+const searchPhotos = (keyword: string) => {
+  searchQuery.value = keyword.trim()
+  isSearchActive.value = Boolean(searchQuery.value)
+  currentPage.value = 1
+  highlightMatchingPhotos()
+  
+  if (searchQuery.value) {
+    proxy.$message({ 
+      type: 'info', 
+      message: `搜索结果: 找到 ${filteredPhotos.value.length} 张照片` 
+    })
+  }
+}
+
+// 处理搜索输入
+const handleSearchInput = () => {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+  }
+  
+  searchTimeout.value = setTimeout(() => {
+    isSearchActive.value = Boolean(searchQuery.value.trim())
+    highlightMatchingPhotos()
+    currentPage.value = 1
+  }, 300)
+}
+
+// 重置搜索
+const resetSearch = () => {
+  searchQuery.value = ''
+  isSearchActive.value = false
+  highlightedPhotoIds.value = []
+  currentPage.value = 1
+}
+
+// 高亮匹配的照片
+const highlightMatchingPhotos = () => {
+  highlightedPhotoIds.value = []
+  
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase().trim()
+    highlightedPhotoIds.value = photos.value
+      .filter(photo => photo.name.toLowerCase().includes(query))
+      .map(photo => photo.id)
+  }
+}
+
+// 监听相册选择变化
+watch(selectedAlbum, () => {
+  if (isSearchActive.value) {
+    resetSearch()
+  }
+})
+
+// 处理预览
+const handlePreview = (photo: any) => {
+  if (!photo || !photo.url) {
+    proxy.$message({ type: 'error', message: '无法预览该照片' })
+    return
+  }
+  
+  previewImage.value = photo.url.startsWith('http') ? photo.url : baseImgPath + photo.url.replace(/^\/img/, '')
+  previewVisible.value = true
+}
+
+// 显示移动照片模态框
+const showMovePhotoModal = (photo: any) => {
+  selectedPhotoForMove.value = photo
+  movePhotoModalVisible.value = true
+}
+
+// 处理移动照片到其他相册
+const movePhotoToAlbum = async (photoId: number, targetAlbumId: number) => {
+  try {
+    const res = await movePhotoToAlbumApi(photoId, targetAlbumId)
+    
+    if (res.code === 200 && res.data) {
+      photos.value = photos.value.map((photo) =>
+        photo.id === photoId ? {
+          ...photo,
+          albumId: targetAlbumId
+        } : photo
+      )
+      
+      const oldAlbumId = selectedPhotoForMove.value.albumId
+      updateAlbumCountUI(oldAlbumId, -1)
+      updateAlbumCountUI(targetAlbumId, 1)
+      
+      if (selectedAlbum.value === `${oldAlbumId}album` && oldAlbumId !== 1) {
+        await loadPhotos(parseInt(selectedAlbum.value))
+      }
+      
+      proxy.$message({ type: 'success', message: res.message || '照片移动成功' })
+    } else {
+      throw new Error(res.message || '照片移动失败')
+    }
+  } catch (error: any) {
+    console.error('移动照片失败:', error)
+    proxy.$message({ type: 'error', message: error.message || '照片移动失败，请稍后重试' })
+  } finally {
+    movePhotoModalVisible.value = false
+  }
+}
+
+// 处理编辑相册
+const handleEditAlbum = (album: any) => {
+  // TODO: 实现编辑相册功能
+  console.log('编辑相册:', album)
+}
+
+// 处理删除相册
+const handleDeleteAlbum = (album: any) => {
+  // TODO: 实现删除相册功能
+  console.log('删除相册:', album)
+}
+
+// 处理删除照片
+const handleDelete = async (photo: any) => {
+  try {
+    const res = await deletePhotoApi(photo.id)
+    
+    if (res.code === 200) {
+      // 从列表中移除照片
+      photos.value = photos.value.filter(p => p.id !== photo.id)
+      
+      // 更新相册计数
+      const albumId = photo.albumId
+      updateAlbumCountUI(albumId, -1)
+      
+      proxy.$message({ type: 'success', message: '照片删除成功' })
+    } else {
+      throw new Error(res.message || '删除照片失败')
+    }
+  } catch (error: any) {
+    console.error('删除照片失败:', error)
+    proxy.$message({ type: 'error', message: error.message || '删除照片失败，请稍后重试' })
+  }
+}
+
+onMounted(async () => {
+  await loadAlbums()
+  await loadPhotos()
+})
 </script>
 
 <style lang="less" scoped>
-  .gallery-container {
-    padding: @space-xl 0;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+.gallery-container {
+  padding: @space-xl 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  .gallery-header {
-    text-align: center;
+.gallery {
+  display: flex;
+  gap: @space-xl;
+  width: 100%;
+  
+  &__content {
+    flex: 1;
+    background-color: @bg-color-l;
+    border-radius: @radius-m;
+    padding: @space-l;
+    display: flex;
+    flex-direction: column;
+    gap: @space-l;
+    max-height: 720px;
+    overflow-y: auto;
+  }
+  
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: @space-l;
+  }
+}
+
+.gallery-footer {
+  margin-top: @space-xl;
+  padding: @space-xl 0;
+  
+  .footer-divider {
+    height: 1px;
+    background-color: #e0e0e0;
     margin-bottom: @space-xl;
   }
   
-  .gallery {
+  .social-links {
     display: flex;
-    gap: @space-xl;
-    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 @space-xl;
     
-    &__sidebar {
-      flex: none;
-      width: 280px;
-      padding: @space-l @space-xl;
-      border-radius: @radius-m;
-      background-color: @bg-color-l;
-      display: flex;
-      flex-direction: column;
-      
-      &-title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: @space-l;
-      }
-      
-      &-selected {
-        background-color: @pcolor-2;
-        color: @pcolor;
-      }
-      
-      &-footer {
-        margin-top: auto;
-        padding-top: @space-xl;
-      }
-      
-      .yk-text {
-        cursor: pointer;
-      }
+    .footer-text {
+      text-align: left;
     }
     
-    &__content {
-      flex: 1;
-      background-color: @bg-color-l;
-      border-radius: @radius-m;
-      padding: @space-l;
+    .social-icons-container {
       display: flex;
-      flex-direction: column;
-      gap: @space-l;
+      gap: @space-xl;
     }
     
-    &__toolbar {
+    .social-link {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      
-      &-left, &-right {
-        display: flex;
-        align-items: center;
-      }
-    }
-    
-    &__grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: @space-l;
-    }
-    
-    &__grid-item {
-      display: flex;
-      flex-direction: column;
-      border-radius: @radius-m;
-      overflow: hidden;
-      background-color: @bg-color-m;
-      transition: all 0.3s;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
       
       &:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        transform: translateY(-4px);
-        
-        .gallery__image-overlay {
-          opacity: 1;
-        }
-        
-        .gallery__image {
-          transform: scale(1.05);
-        }
-      }
-    }
-    
-    &__image-container {
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: 4/3;
-    }
-    
-    &__image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-    
-    &__image-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.4);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    
-    &__image-info {
-      padding: @space-m;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    
-    &__pagination {
-      display: flex;
-      justify-content: center;
-      margin-top: @space-l;
-    }
-  }
-  
-  .album-item {
-    padding: @space-s @space-m;
-    border-radius: @radius-s;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 4px;
-    border-left: 3px solid transparent;
-    
-    &:hover {
-      background-color: @pcolor-1;
-      border-left-color: @pcolor;
-    }
-    
-    &__title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    &__count {
-      background-color: @bg-color-m;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-  }
-  
-  .social-icons {
-    display: flex;
-    gap: @space-m;
-  }
-  
-  .social-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: @bg-color-m;
-    cursor: pointer;
-    transition: all 0.2s;
-    
-    &:hover {
-      background-color: @pcolor-1;
-      color: @pcolor;
-    }
-  }
-  
-  .upload-container {
-    display: flex;
-    gap: @space-xl;
-  }
-  
-  .upload-tips {
-    display: flex;
-    flex-direction: column;
-    gap: @space-s;
-  }
-  
-  .gallery-footer {
-    margin-top: @space-xl;
-    padding: @space-xl 0;
-    
-    .footer-divider {
-      height: 1px;
-      background-color: #e0e0e0;
-      margin-bottom: @space-xl;
-    }
-    
-    .social-links {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 @space-xl;
-      
-      .footer-text {
-        text-align: left;
+        transform: translateY(-2px);
       }
       
-      .social-icons-container {
-        display: flex;
-        gap: @space-xl;
-      }
-      
-      .social-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        transition: all 0.3s ease;
+      .social-icon-img {
+        width: 32px;
+        height: 32px;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
         
         &:hover {
-          transform: translateY(-2px);
-        }
-        
-        .social-icon-img {
-          width: 32px;
-          height: 32px;
-          opacity: 0.7;
-          transition: opacity 0.3s ease;
-          
-          &:hover {
-            opacity: 1;
-          }
+          opacity: 1;
         }
       }
     }
   }
+}
+
+.preview-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 </style>

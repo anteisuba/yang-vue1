@@ -1,32 +1,32 @@
 export const navLinks = [
   {
     path: 'overview',
-    name: '总览',
+    name: 'Home',
     icon: 'IconAppFill',
   },
   {
     path: 'localfile',
-    name: '本地文件',
+    name: 'Blog',
     icon: 'IconHomepageFill',
   },
   {
     path: 'article',
-    name: '博客文章',
+    name: 'Videos',
     icon: 'IconFileFill',
   },
   {
     path: 'gallery',
-    name: '摄影图库',
+    name: 'Gallery',
     icon: 'IconCameraFill',
   },
   {
     path: 'diary',
-    name: '我的',
+    name: 'About',
     icon: 'IconBilibiliFill',
   },
   {
     path: 'install',
-    name: '设置',
+    name: 'Contact',
     icon: 'IconSettingsFill',
   },
 ]

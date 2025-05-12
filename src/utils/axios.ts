@@ -11,6 +11,11 @@ const service = axios.create({
 service.interceptors.request.use(
     //发送请求前做些什么
     config=> {
+        // 添加token认证
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.token = token;
+        }
         return config;
     },
     //对请求错误做些什么
@@ -31,7 +36,15 @@ service.interceptors.response.use(
         }
     },
     error=>{
-        YkMessage({type:'warning',message:error.message})
+        console.error('请求错误:', error);
+        // 处理401未授权错误
+        if (error.response && error.response.status === 401) {
+            YkMessage({type:'error', message:'登录已失效，请重新登录'});
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+            return Promise.reject();
+        }
+        YkMessage({type:'warning', message: error.message || '请求失败'})
         return Promise.reject();
     }
 )

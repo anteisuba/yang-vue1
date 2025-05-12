@@ -1,7 +1,7 @@
 <template>
   <div class="head-bar" v-if="isLoggedIn">
     <yk-space align="center" size="m" style="cursor: pointer" v-on:click="backHome">
-      <img src="../../assets/Group18.svg" class="logo" />
+      <img src="../../assets/touxiang/c.jpeg" class="logo" />
       <span class="name">博客后台</span>
     </yk-space>
     <yk-space align="center" size="xl">
@@ -17,15 +17,21 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, ref } from 'vue'
-  import { useRouter } from 'vue-router'
+  import { onMounted, ref, watch } from 'vue'
+  import { useRouter, useRoute } from 'vue-router'
   import { Information } from '../reply'
   import { isRegisterApi } from '@/api'
   import { useCode } from '@/hooks/code'
   const router = useRouter();
+  const route = useRoute();
 
   // 检查登录状态
   const isLoggedIn = ref(!!localStorage.getItem('token'));
+
+  // 监听路由变化，检查登录状态
+  watch(() => route.path, () => {
+    isLoggedIn.value = !!localStorage.getItem('token');
+  });
 
   //code验证
   const {tackleCode} = useCode();
@@ -66,41 +72,108 @@
     router.push('/login');
   }
 
+  // 检查登录状态的函数
+  const checkLoginStatus = () => {
+    isLoggedIn.value = !!localStorage.getItem('token');
+  }
+
   onMounted(() => {
     isRegister();
+    checkLoginStatus();
+    // 监听登录事件
+    window.addEventListener('storage', checkLoginStatus);
   })
 </script>
 
 <style lang="less" scoped>
   .head-bar {
-    /* 固定导航栏 返回顶部按钮 固定的聊天窗口 悬浮的广告或提示框 网站的 cookie 提示条*/
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     width: 100%;
     height: 72px;
-    background: @bg-color-l;
-    z-index: 10;
-    // 分布在两边
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 100;
     display: flex;
-    // 上下居中
-    // align-content: space-between;
     align-items: center;
-    // 第一个项目放在起点
-    // 最后一个项目放在终点
-    // 剩余空间平均分配到其他项目之间
-    // 项目之间的间隔相等
     justify-content: space-between;
     padding: 0 @space-xl;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+
     .logo {
-      width: 68px;
-      height: 43px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      border: 2px solid transparent;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: #2b5aed;
+      }
     }
+
     .name {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
+      color: @font-color-m;
+      margin-left: @space-m;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #2b5aed;
+      }
+    }
+
+    :deep(.yk-space) {
+      .yk-avatar {
+        transition: transform 0.3s ease;
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+
+      .yk-button {
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(43, 90, 237, 0.2);
+        }
+      }
+
+      .icon {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        color: @font-color-m;
+
+        &:hover {
+          color: #2b5aed;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .head-bar {
+      padding: 0 @space-m;
+      height: 60px;
+
+      .logo {
+        width: 32px;
+        height: 32px;
+      }
+
+      .name {
+        font-size: 16px;
+      }
     }
   }
 </style>

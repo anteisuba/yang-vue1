@@ -237,7 +237,7 @@
 <style lang="less" scoped>
   .twitter {
     position: relative;
-    max-width: 680px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 16px;
     display: flex;
@@ -443,7 +443,7 @@
     }
     
     .tweet__image {
-      max-width: 100%;
+      max-width: 40%;
       border-radius: 12px;
       margin-top: 8px;
     }

@@ -1,55 +1,70 @@
 <template>
-  <yk-space dir="vertical" class="menu-bar" size="m">
-    <router-link :to="item.path" v-for="item in navLinks" :key="item.path" class="menu-bar__nav">
-      <yk-space align="center" size="m">
-        <!-- <IconAlarmOutline v-show="index===0" /> -->
-        <component :is="item.icon"></component>
-        <yk-text>{{ item.name }}</yk-text>
-      </yk-space>
-    </router-link>
-  </yk-space>
+  <nav class="nav-bar">
+    <ul class="nav-list">
+      <li
+        v-for="item in navLinks"
+        :key="item.path"
+        :class="['nav-item', { active: $route.path === item.path }]"
+      >
+        <router-link :to="item.path">{{ item.name }}</router-link>
+      </li>
+    </ul>
+  </nav>
 </template>
 
-<script lang="ts" setup>
-  import { navLinks } from '../../utils/menu'
+<script setup lang="ts">
+import { navLinks } from '../../utils/menu'
+import { useRoute } from 'vue-router'
+const $route = useRoute()
 </script>
 
 <style lang="less" scoped>
-  .menu-bar {
-    padding: @space-l;
-    position: fixed;
-    top: 72px;
-    left: 8px;
-    &__nav {
-      width: 160px;
-      height: 40px;
-      background: @bg-color-l;
-      border-radius: @radius-m;
-      padding: 0 @space-l;
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      .yk-icon {
-        color: @font-color-ss;
-        width: 16px;
-        height: 16px;
-      }
-      &:hover {
-        background-color: @bg-color-l;
-        .yk-text {
-          font-weight: 600;
-        }
-      }
-    }
-    .router-link-active {
-      background: linear-gradient(180deg, #2b5aedde 0%, #2b5aed 100%);
-      .yk-icon {
-        color: @white;
-      }
-      .yk-text {
-        color: @white;
-        font-weight: 600;
-      }
-    }
+.nav-bar {
+  width: 100vw;
+  background: #111;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  z-index: 150;
+  min-height: 40px;
+}
+.nav-list {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-item {
+  font-size: 18px;
+  font-weight: 400;
+  a {
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 0;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 2px solid transparent;
   }
+  &:hover a {
+    color: #2b5aed;
+    border-bottom: 2px solid #2b5aed;
+  }
+  &.active a {
+    color: #2b5aed;
+    font-weight: 600;
+    border-bottom: 2px solid #2b5aed;
+  }
+}
+@media (max-width: 768px) {
+  .nav-list {
+    gap: 20px;
+  }
+  .nav-item {
+    font-size: 16px;
+  }
+}
 </style>

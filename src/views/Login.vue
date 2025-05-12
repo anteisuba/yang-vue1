@@ -35,6 +35,13 @@
         psw:'',
     })
 
+    // 触发登录状态变更的函数
+    const triggerLoginEvent = () => {
+      // 触发本地存储事件，以便其他组件可以监听到
+      window.dispatchEvent(new Event('storage'));
+      // 这里也可以使用其他方式如状态管理库(Pinia)来共享状态
+    }
+
     //提交
     const submit = () => {
       console.log("提交前用户输入：", user.value) // ✅ 先看这里是否打印出了你输入的内容
@@ -47,19 +54,21 @@
         }
 
         signinApi(data).then((res: any) => {
-  const code = res.code       // 获取响应code
-  if (code === 200) {
-    // 保存token到localStorage
-    if (res.data && res.data.token) {
-      localStorage.setItem('token', res.data.token);
-    }
-    router.push('/index')
-  } else if (code === 400) {
-    proxy.$message({ type: 'error', message: 'ユーザ名とパスワードが間違っています！' })
-  } else {
-    proxy.$message({ type: 'warning', message: 'ログイン失敗' })
-  }
-})
+          const code = res.code       // 获取响应code
+          if (code === 200) {
+            // 保存token到localStorage
+            if (res.data && res.data.token) {
+              localStorage.setItem('token', res.data.token);
+              // 触发登录状态更新事件
+              triggerLoginEvent();
+            }
+            router.push('/index')
+          } else if (code === 400) {
+            proxy.$message({ type: 'error', message: 'ユーザ名とパスワードが間違っています！' })
+          } else {
+            proxy.$message({ type: 'warning', message: 'ログイン失敗' })
+          }
+        })
 
 
       } else {

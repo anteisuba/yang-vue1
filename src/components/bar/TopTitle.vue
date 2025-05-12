@@ -52,14 +52,79 @@
 
 <style lang="less" scoped>
   .top_title {
-    display: flex; // 提高优先级
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; // 确保占满宽度
+    width: 100%;
+    padding: @space-l 0;
+    margin-bottom: @space-l;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+
+    .left-content {
+      display: flex;
+      align-items: center;
+      gap: @space-m;
+
+      :deep(.yk-title) {
+        color: @font-color-m;
+        transition: color 0.3s ease;
+        font-weight: 600;
+
+        &:hover {
+          color: #2b5aed;
+        }
+      }
+    }
+
+    :deep(.yk-space) {
+      .yk-button {
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(43, 90, 237, 0.1);
+        }
+      }
+
+      .yk-input-search {
+        transition: all 0.3s ease;
+        
+        &:focus-within {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(43, 90, 237, 0.1);
+        }
+
+        .yk-input {
+          border-radius: @radius-m;
+          border-color: rgba(43, 90, 237, 0.2);
+          
+          &:hover, &:focus {
+            border-color: #2b5aed;
+          }
+        }
+
+        .yk-button {
+          border-radius: 0 @radius-m @radius-m 0;
+        }
+      }
+    }
   }
-  .left-content {
-    display: flex; // 提高优先级
-    align-items: center;
-    gap: 12px; /* 控制标题和自定义插槽之间的间距 */
+
+  @media screen and (max-width: 768px) {
+    .top_title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: @space-m;
+      padding: @space-m 0;
+
+      :deep(.yk-space) {
+        width: 100%;
+        
+        .yk-input-search {
+          width: 100% !important;
+        }
+      }
+    }
   }
 </style>

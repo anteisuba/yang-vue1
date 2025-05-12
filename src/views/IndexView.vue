@@ -12,7 +12,5 @@
 </script>
 
 <style lang="less" scoped>
-  .index-view {
-    padding: 32px 32px 32px 232px;
-  }
+  
 </style>
